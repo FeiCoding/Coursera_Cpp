@@ -12,7 +12,7 @@ int main(){
     for(int i = 0; i < 3; i++){
         cin >> id >> n;
         char type = '\0';
-        float num = 0;
+        float num = 0.0;
         for(int j = 0; j < n; j++){
             cin >> type >> num;
             totalCount[id - 1] += num;
@@ -26,7 +26,7 @@ int main(){
         }
     }
     for(int i = 0; i < 3; i++){
-        cout << i + 1 << ' ' << totalCount[i] << endl;
+        cout << i + 1 << ' ' << fixed<<setprecision(2) << totalCount[i] << endl;
     }
     for(int i = 0; i < 3; i++){
         char type = '\0';

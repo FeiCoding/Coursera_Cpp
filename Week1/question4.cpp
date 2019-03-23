@@ -11,7 +11,6 @@ int count_day(int year){
     }
 }
 
-
 int main(){
     int year = 0;
     int month = 0;
