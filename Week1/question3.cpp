@@ -7,8 +7,8 @@ using namespace std;
 int main(){
     int id;
     int n;
-    float recipeCount[3];
-    float totalCount[3];
+    float recipeCount[3] = {0};
+    float totalCount[3] = {0};
     for(int i = 0; i < 3; i++){
         cin >> id >> n;
         char type = '\0';
