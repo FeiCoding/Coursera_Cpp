@@ -1,32 +1,64 @@
 #include <iostream>
+#include <iomanip>
 using namespace std;
 
-int count_day(int year){
-    if(year % 4 == 0 && year % 100 != 0){
-        return 29;
-    }else if (year % 400 == 0) {
-		return true;	
-	}else{
-        return 28;
-    }
+bool isLeapYear(int year);
+bool isEndOfMonth(int month, int day, bool isLeapYear);
+bool isEndOfYear(int month, int day);
+
+int main()
+{
+	int year, month, day;
+	char dash;
+	cin >> year >> dash >> month >> dash >> day;
+	if (isEndOfMonth(month, day, isLeapYear(year)))
+	{
+		if (isEndOfYear(month, day))
+		{
+			year++;
+			month = 1;
+			day = 1;
+		}
+		else
+		{
+			month++;
+			day = 1;
+		}
+	}
+	else
+	{
+		day++;
+	}
+	cout << year << '-'
+		<< setfill('0') << setw(2) << month << '-'
+		<< setfill('0') << setw(2) << day << endl;
+	return 0;
 }
 
-int main(){
-    int year = 0;
-    int month = 0;
-    int day = 0;
-    char slash;
-    cin >> year >> slash >> month >> slash >> day;
-    cout << year << ' ' << month << ' ' << day << endl;
-    int J_day = count_day(year);
-    int month_day[12] = {31, J_day, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
-    if(day + 1 <= month_day[month - 1]){
-        printf("%d-%02d-%02d\n", year, month, day + 1);
-    }
-    else if(month < 12){
-        printf("%d-%02d-%02d\n", year, month + 1, 01);
-    }else{
-        printf("%d-%02d-%02d\n", year + 1, 01, 01);
-    }
-    return 0;
+bool isLeapYear(int year)
+{
+	return year % 400 == 0 || (year % 100 != 0 && year % 4 == 0);
+}
+
+bool isEndOfMonth(int month, int day, bool isLeapYear)
+{
+	int months[] = { 31,28,31,30,31,30,31,31,30,31,30,31 };
+	if (isLeapYear)
+	{
+		months[1] = 29;
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		if (day == months[month - 1])
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool isEndOfYear(int month, int day)
+{
+	return month == 12 && day == 31;
 }
