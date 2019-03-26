@@ -29,8 +29,8 @@ int find(char str[100], int index, bool matched[100]){
 
 int main(){
     char str[100];
-    bool matched[100] = {false};
     while(cin.getline(str, 101)){
+        bool matched[101] = {false};
         int n = find(str, 0, matched);
         while(n != -1){
             n = find(str, n + 1, matched);
