@@ -11,9 +11,8 @@ int main(){
     int count = 0;
     for(int i = 0; i < num; i ++){       
         cin >> word;
-        count = strlen(word) + count;
-        if(count + 1 > 80){
-            count = strlen(word);
+        if(strlen(word) + count + 1 > 80){
+            count = 0;
             cout << endl;
         }
         else if(count > 0){
@@ -21,6 +20,7 @@ int main(){
             count ++;
         }
         cout << word;
+        count = strlen(word) + count;
     }
     return 0;
 }
