@@ -15,10 +15,10 @@ int compare(const void *elem1, const void *elem2){
 }
 
 int main(){
-    int a[7] = {5, 2, 4, 0, 8, 12, 3};
+    unsigned int a[7] = {5, 2, 4, 0, 8, 12, 3};
     int (*pfCompare)(const void *, const void *); // pfCompare is a function pointer
     pfCompare = compare;
-    qsort(a, 7, 4, pfCompare);
+    qsort(a, 7, sizeof(unsigned int), pfCompare);
     for(int i = 0; i < 7; i++){
         cout << a[i] << ' ';
     }
