@@ -1,4 +1,7 @@
+#include <iostream>
+using namespace std;
+
 int main(){
-class A { int v; };
-A a; a.v = 3; return 0;
+    int a = 0;
+    cout << 1 % 5 << endl;
 }

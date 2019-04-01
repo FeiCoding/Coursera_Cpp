@@ -1,108 +1,193 @@
-#include<iostream>
+#include <iostream>
 #include <string>
 #include <iomanip>
 using namespace std;
 
-const string redProduceQueue[5] = {"iceman","lion","wolf","ninja","dragon"};
-const string blueProduceQueue[5] = {"lion","dragon","ninja","iceman","wolf"};
-const string monsterLife[5] = {"dragon","ninja","iceman","lion","wolf"};
-static int countQueue[5] = {0}; 
-class Monster{
-    public:
-    string type;
-    int id;
-    int life;
-    int strength;
-    string side;
-    
-    public:
-    Monster(string type, int id, int life, int strength, string side): type(type),id(id),life(life),strength(strength), side(side){}
+string inputOrder[5] = { "dragon","ninja","iceman","lion","wolf" };
+string redWarrior[5] = { "iceman","lion","wolf","ninja","dragon" };
+int redInitialStrength[5];
+string blueWarrior[5] = { "lion","dragon","ninja","iceman","wolf" };
+int blueInitialStrength[5];
+
+class Warrior
+{
+private:
+	int id;
+	int strength;
+	int attack;
+	string classes;
+public:
+	Warrior() {}
+	Warrior(int id, int s, int atk, string classes) :
+		id(id), strength(s), attack(atk), classes(classes) {}
+	int getStrength()
+	{
+		return strength;
+	}
+	string getClasses()
+	{
+		return classes;
+	}
 };
 
-class Commander{
-    public:
-    string name;
-    int totalLife;
-    int queue[5];
-    public:
-    Commander(string name, int totalLife):name(name),totalLife(totalLife){ queue[5] = {0};}
-    void addQueue(int i);
-    int produce(string name, int num, int life, int strength, string side);
+class Headquater
+{
+private:
+	string alliance;
+	static int redTotalStrength;
+	static int blueTotalStrength;
+	static int redWarriorCount;
+	static int blueWarriorCount;
+	int numOfEachClasses[5] = { 0 };
+	int warriorIndex;
+	Warrior warrior[1000];
+public:
+	Headquater(string a) :alliance(a), warriorIndex(0) {}
+	static void SetToalStrength(int strength)
+	{
+		redTotalStrength = strength;
+		blueTotalStrength = strength;
+	}
+	static void ResetWarriorCount()
+	{
+		redWarriorCount = 0;
+		blueWarriorCount = 0;
+	}
+	int makeWarrior();
 };
 
-void Commander::addQueue(int i){
-    queue[i]++;
-}
-int Commander::produce(string name, int num, int life, int strength, string side){
-    Monster m(name, num, life, strength, side);
-    int index = 0;
-    for(; index < 5; index++){
-        if(name == monsterLife[index]){
-            countQueue[index]++;
-            break;
-        }
-    }
-    return index;
+int Headquater::redWarriorCount = 0;
+int Headquater::blueWarriorCount = 0;
+int Headquater::redTotalStrength = 0;
+int Headquater::blueTotalStrength = 0;
+
+int Headquater::makeWarrior()
+{
+	static int notMadeCount = 0;
+	if (alliance == "red")
+	{
+		string classes = redWarrior[warriorIndex];
+		int strength = redInitialStrength[warriorIndex];
+		if (redTotalStrength - strength >= 0)
+		{
+			notMadeCount = 0;
+			redTotalStrength -= strength;
+			warrior[redWarriorCount] = { redWarriorCount,strength,0,classes };
+			redWarriorCount++;
+			numOfEachClasses[warriorIndex]++;
+			cout << "red " << classes << " " << redWarriorCount << " born with strength " << strength << "," << numOfEachClasses[warriorIndex] << " " << classes << " in red headquarter" << endl;
+			++warriorIndex %= 5;
+			return true;
+		}
+		else
+		{
+			notMadeCount++;
+			++warriorIndex %= 5;
+			if (notMadeCount > 5)
+			{
+				notMadeCount = 0;
+				return false;
+			}
+			return this->makeWarrior();
+
+		}
+	}
+	else if (alliance == "blue")
+	{
+		string classes = blueWarrior[warriorIndex];
+		int strength = blueInitialStrength[warriorIndex];
+		if (blueTotalStrength - strength >= 0)
+		{
+			notMadeCount = 0;
+			blueTotalStrength -= strength;
+			warrior[blueWarriorCount] = { blueWarriorCount,strength,0,classes };
+			blueWarriorCount++;
+			numOfEachClasses[warriorIndex]++;
+			cout << "blue " << classes << " " << blueWarriorCount << " born with strength " << strength << "," << numOfEachClasses[warriorIndex] << " " << classes << " in blue headquarter" << endl;
+			++warriorIndex %= 5;
+		}
+		else
+		{
+			notMadeCount++;
+			++warriorIndex %= 5;
+			if (notMadeCount > 5)
+			{
+				notMadeCount = 0;
+				return false;
+			}
+			return this->makeWarrior();
+		}
+	}
 }
 
-void assignValue(int lifeCost[5], int life[5], const string side, const string nameProduceQueue[5] = NULL){
-    if(side == "red"){
-        nameProduceQueue = redProduceQueue;
-    }else{
-        nameProduceQueue = blueProduceQueue;
-    }
-    for(int i = 0; i < 5; i++){
-        for(int j = 0; j < 5; j++){
-            if(nameProduceQueue[i] == monsterLife[j]){
-                lifeCost[i] = life[j];
-                break;
-            }
-        }
-    }
-}
 
-int main(){
-    int group = 0;
-    cin >> group;
 
-    int M = 0;
-    cin >> M;
-    int life[5] = {0};
-    Commander red("Red",M);
-    Commander blue("Blue", M);
-    for(int i = 0; i < 5; i++){
-        cin >> life[i];
-    }
-    int redLifeCost[5] = {0};
-    int blueLifeCost[5] = {0};
-    int redCount[5] = {0};
-    int blueCount[5] = {0};
-    assignValue(redLifeCost, life, "red");
-    assignValue(blueLifeCost, life, "blue");
-    int time = 0; 
-    while(red.totalLife >= 0 || blue.totalLife >= 0){
-        int index_red = time % 5;
-        while(index_red < 5){
-            if(red.totalLife >= redLifeCost[index_red]){
-                int index_count = red.produce(redProduceQueue[index_red], redLifeCost[index_red], redLifeCost[index_red], 0, "red");
-                cout << setw(3) << setfill('0') << time << " red " << redProduceQueue[index_red] << countQueue[index_count] << " born with strength " << redLifeCost[index_red] << "," << redCount[index_red] << " " << redProduceQueue[index_red] << " in red headquarter" << endl;
-                red.totalLife -= redLifeCost[index_red];
-                break;
-            }
-            index_red++;
-        }
-        int blue_index = time % 5;
-        while(blue_index < 5){
-            if(blue.totalLife >= blueLifeCost[blue_index]){
-                int index_count = blue.produce(blueProduceQueue[blue_index], blueLifeCost[blue_index], blueLifeCost[blue_index], 0, "blue");
-                cout << setw(3) << setfill('0') << time << " blue " << blueProduceQueue[blue_index] << countQueue[index_count] << " born with strength " << blueLifeCost[blue_index] << "," << blueCount[blue_index] << " " << blueProduceQueue[blue_index] << " in blue headquarter" << endl;
-                blue.totalLife -= blueLifeCost[blue_index];
-                break;
-            }
-            blue_index++;
-        }
-        
-        time++;
-    }
-    return 0;
+
+
+int main()
+{
+	int numOfTest = 0;
+	cin >> numOfTest;
+
+	for (int i = 1; i <= numOfTest; i++)
+	{
+		int M = 0;
+		cin >> M;
+		Headquater red("red"), blue("blue");
+		Headquater::SetToalStrength(M);
+		Headquater::ResetWarriorCount();
+
+		for (int j = 0; j < 5; j++)
+		{
+			int strength;
+			cin >> strength;
+			for (int k = 0; k < 5; k++)
+			{
+				if (inputOrder[j] == redWarrior[k])
+				{
+					redInitialStrength[k] = strength;
+				}
+			}
+			for (int k = 0; k < 5; k++)
+			{
+				if (inputOrder[j] == blueWarrior[k])
+				{
+					blueInitialStrength[k] = strength;
+				}
+			}
+		}
+
+		cout << "Case:" << i << endl;
+		bool redStop = false;
+		bool blueStop = false;
+		int time = 0;
+		while (true)
+		{
+			if (!redStop)
+			{
+				cout << setw(3) << setfill('0') << time << " ";
+				redStop = !red.makeWarrior();
+				if (redStop)
+				{
+					cout << "red headquarter stops making warriors" << endl;
+				}
+
+			}
+			if (!blueStop)
+			{
+				cout << setw(3) << setfill('0') << time << " ";
+				blueStop = !blue.makeWarrior();
+				if (blueStop)
+				{
+					cout << "blue headquarter stops making warriors" << endl;
+				}
+			}
+			if (redStop && blueStop)
+			{
+				break;
+			}
+			time++;
+		}
+	}
+	return 0;
 }
