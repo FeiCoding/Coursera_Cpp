@@ -57,13 +57,16 @@ void Commander::costValue(const int life[5], const string produceQueue[5]) {
 }
 
 void Commander::formProduceIndex(const int start_index) {
-	int index = start_index;
-	for (int i = 0; i < start_index; i++) {
-		produceIndex[i] = index++;
+	int start_value = start_index;
+	int index = 0;
+	while (start_value < 5) {
+		produceIndex[index++] = start_value;
+		start_value++;
 	}
-	index = 0;
-	for (int i = start_index; i < 5; i++) {
-		produceIndex[i] = index++;
+	start_value = 0;
+	while (index < 5) {
+		produceIndex[index++] = start_value;
+		start_value++;
 	}
 }
 
@@ -76,12 +79,13 @@ void Commander::produce(const int time, const string produceQueue[5]) {
 	if (totalLife < minProduceCost && !finish) {
 		cout << setw(3) << setfill('0') << time << " " << name << " headquarter stops making warriors" << endl;
 		setFinish();
+		return;
 	}
 	int rolling_index = 0;
 	while (rolling_index < 5) {
-		cout << setw(3) << setfill('0') << time;
 		int index = produceIndex[rolling_index];
 		if (totalLife >= produceCost[index]) {
+			cout << setw(3) << setfill('0') << time;
 			cout << " " << name << " " << produceQueue[index] << " " << ++count << " born with strength " << produceCost[index] << ",";
 			cout << ++produceCount[index] << " " << produceQueue[index] << " in " << name << " headquarter" << endl;
 			totalLife -= produceCost[index];
