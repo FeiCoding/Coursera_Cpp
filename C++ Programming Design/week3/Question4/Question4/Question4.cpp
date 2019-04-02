@@ -6,45 +6,93 @@ using namespace std;
 const string redProduceQueue[5] = { "iceman","lion","wolf","ninja","dragon" };
 const string blueProduceQueue[5] = { "lion","dragon","ninja","iceman","wolf" };
 const string monsterNameOrder[5] = { "dragon","ninja","iceman","lion","wolf" };
-static int red_id = 1;
-static int blue_id = 1;
 
-class Commander {
-public:
-	string name;
-	int totalLife;
-public:
-	Commander(string name, int totalLife) :name(name), totalLife(totalLife) { }
+class Warrior {
+
 };
 
 
-void costValue(int lifeCost[5], int life[5], const string side, const string produceQueue[5] = NULL) {
-	if (side == "red") {
-		produceQueue = redProduceQueue;
+class Commander {
+private:
+	string name;
+	int totalLife;
+	int count = 0;
+	static int minProduceCost;
+	static int produceIndex[5];
+	int produceCost[5] = { 0 };
+	int produceCount[5] = { 0 };
+	bool finish = false;
+public:
+	Commander(string name, int totalLife) :name(name),totalLife(totalLife){}
+	void costValue(const int life[5], const string produceQueue[5] = NULL);
+	void formProduceIndex(const int start_index);
+	static void setMinCost(int cost) {
+		minProduceCost = cost;
 	}
-	else {
-		produceQueue = blueProduceQueue;
+	static int getMinCost() {
+		return minProduceCost;
 	}
+	void setFinish() {
+		finish = !finish;
+	}
+	bool getFinish() {
+		return finish;
+	}
+	int* getProduceIndex() {
+		return produceIndex;
+	}
+	void produce(const int time, const string produceQueue[5] = NULL);
+};
+
+
+void Commander::costValue(const int life[5], const string produceQueue[5]) {
 	for (int i = 0; i < 5; i++) {
 		for (int j = 0; j < 5; j++) {
 			if (produceQueue[i] == monsterNameOrder[j]) {
-				lifeCost[i] = life[j];
+				produceCost[i] = life[j];
 				break;
 			}
 		}
 	}
 }
 
-void getIndex(int arr[5], int start_index) {
+void Commander::formProduceIndex(const int start_index) {
 	int index = start_index;
 	for (int i = 0; i < start_index; i++) {
-		arr[i] = index++;
+		produceIndex[i] = index++;
 	}
 	index = 0;
 	for (int i = start_index; i < 5; i++) {
-		arr[i] = index++;
+		produceIndex[i] = index++;
 	}
 }
+
+void Commander::produce(const int time, const string produceQueue[5]) {
+	if (finish) {
+		return;
+	}
+	int start_index = time % 5;
+	formProduceIndex(start_index);
+	if (totalLife < minProduceCost && !finish) {
+		cout << setw(3) << setfill('0') << time << " " << name << " headquarter stops making warriors" << endl;
+		setFinish();
+	}
+	int rolling_index = 0;
+	while (rolling_index < 5) {
+		cout << setw(3) << setfill('0') << time;
+		int index = produceIndex[rolling_index];
+		if (totalLife >= produceCost[index]) {
+			cout << " " << name << " " << produceQueue[index] << " " << ++count << " born with strength " << produceCost[index] << ",";
+			cout << ++produceCount[index] << " " << produceQueue[index] << " in " << name << " headquarter" << endl;
+			totalLife -= produceCost[index];
+			break;
+		}
+		rolling_index++;
+	}
+}
+
+int Commander::minProduceCost = 100000;
+int Commander::produceIndex[5] = { 0 };
 
 int main() {
 	int group = 0;
@@ -53,57 +101,19 @@ int main() {
 		int M = 0;
 		cin >> M;
 		int life[5] = { 0 };
-		Commander red("Red", M);
-		Commander blue("Blue", M);
-		int minCost = 100000;
+		Commander red("red", M);
+		Commander blue("blue", M);
 		for (int i = 0; i < 5; i++) {
 			cin >> life[i];
-			if (life[i] < minCost)
-				minCost = life[i];
+			if (life[i] < Commander::getMinCost())
+				Commander::setMinCost(life[i]);
 		}
-		int redLifeCost[5] = { 0 };
-		int blueLifeCost[5] = { 0 };
-		int redCount[5] = { 0 };
-		int blueCount[5] = { 0 };
-		costValue(redLifeCost, life, "red");
-		costValue(blueLifeCost, life, "blue");
+		red.costValue(life, redProduceQueue);
+		blue.costValue(life, blueProduceQueue);
 		int time = 0;
-		bool red_finish = false;
-		bool blue_finish = false;
-		while (!red_finish || !blue_finish) {
-			int start_index = time % 5;
-			int rolling_arr[5] = { 0 };
-			getIndex(rolling_arr, start_index);
-			int rolling_index_red = 0;
-			if (red.totalLife < minCost && !red_finish) {
-				cout << setw(3) << setfill('0') << time << " red headquarter stops making warriors" << endl;
-				red_finish = true;
-			}
-			while (red.totalLife >= minCost && rolling_index_red < 5) {
-				int index_red = rolling_arr[rolling_index_red];
-				if (red.totalLife >= redLifeCost[index_red]) {
-					cout << setw(3) << setfill('0') << time << " red " << redProduceQueue[index_red] << " " << red_id++ << " born with strength " << redLifeCost[index_red] << "," << ++redCount[index_red] << " " << redProduceQueue[index_red] << " in red headquarter" << endl;
-					red.totalLife = red.totalLife - redLifeCost[index_red];
-					break;
-				}
-				rolling_index_red++;
-				
-			}
-
-			int rolling_index_blue = 0;
-			if (blue.totalLife < minCost && !blue_finish) {
-				cout << setw(3) << setfill('0') << time << " blue headquarter stops making warriors" << endl;
-				blue_finish = true;
-			}
-			while (blue.totalLife >= minCost && rolling_index_blue < 5) {
-				int index_blue = rolling_arr[rolling_index_blue];
-				if (blue.totalLife >= blueLifeCost[index_blue]) {
-					cout << setw(3) << setfill('0') << time << " blue " << blueProduceQueue[index_blue] << " " << blue_id++ << " born with strength " << blueLifeCost[index_blue] << "," << ++blueCount[index_blue] << " " << blueProduceQueue[index_blue] << " in blue headquarter" << endl;
-					blue.totalLife = blue.totalLife - blueLifeCost[index_blue];
-					break;
-				}
-				rolling_index_blue++;
-			}
+		while (!red.getFinish() || !blue.getFinish()) {
+			red.produce(time, redProduceQueue);
+			blue.produce(time, blueProduceQueue);
 			time++;
 		}
 	}
