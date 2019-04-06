@@ -1,0 +1,6 @@
+﻿  Question4.cpp
+c:\projects\coursera_cpp\c++ programming design\week4\question4\question4\question4.cpp(28): warning C4018: '<': signed/unsigned mismatch
+c:\projects\coursera_cpp\c++ programming design\week4\question4\question4\question4.cpp(31): warning C4018: '<': signed/unsigned mismatch
+c:\projects\coursera_cpp\c++ programming design\week4\question4\question4\question4.cpp(148): warning C4018: '<': signed/unsigned mismatch
+c:\projects\coursera_cpp\c++ programming design\week4\question4\question4\question4.cpp(178): warning C4018: '<': signed/unsigned mismatch
+  Question4.vcxproj -> C:\Projects\Coursera_Cpp\C++ Programming Design\week4\Question4\Debug\Question4.exe
