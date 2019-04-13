@@ -1,5 +1,7 @@
 #include <iostream>
 #include <math.h>
+#include <stdlib.h>
+
 using namespace std;
 
 class CShape{
@@ -56,31 +58,60 @@ void CRectangle::Print(){
     cout << Area() << endl;
 }
 
+int MyCompare(const void *s1, const void *s2){
+    CShape ** p1 = (CShape **) s1;//强制转换原因是s1和s2是void型的，不可直接取得所指内容
+    CShape ** p2 = (CShape **) s2;
+    if((*p1)->Area() < (*p2)->Area()){
+        return 1;
+    }
+    else if((*p1)->Area() > (*p2)->Area()){
+        return -1;
+    }
+    else{
+        return 0;
+    }
+}
+
 int main(){
-    cout << "Please Input the shape you want:" << endl;
-    CShape * p = NULL;
-    char c;
-    CTriangle ct(10, 11, 12);
-    CRectangle cr(10, 11);
-    CCircle cc(10);
-    cin >> c;
-    switch (c)
-    {
+    cout << "Please input how many shape you want to create:" << endl;
+    int n = 0;
+    cin >> n;
+    CShape *shapes[100];
+    for(int i = 0; i < n; i++){
+        cout << "Please Input the " << i+1 <<"th shape you want:" << endl;
+        CTriangle *pt = NULL;
+        CRectangle *pr = NULL;
+        CCircle *pc = NULL;
+        int r, l, m;
+        char c;
+        cin >> c;
+        switch (c)
+        {
         case 'C':
-            p = &cc;
-            p->Print();
+            cin >> r;
+            pc = new CCircle(r);
+            pc->Print();
+            shapes[i] = pc;
             break;
-    
+
         case 'R':
-            p = &cr;
-            p->Print();
+            cin >> l >> m;
+            pr = new CRectangle(l, m);
+            pr->Print();
+            shapes[i] = pr;
             break;
 
         case 'T':
-        default:
-            p = &ct;
-            p->Print();
+            cin >> l >> m >> r;
+            pt = new CTriangle(l, m, r);
+            pt->Print();
+            shapes[i] = pt;
             break;
+        }
+    }
+    qsort(shapes, n, sizeof(CShape*), MyCompare);
+    for(int i = 0; i < n; i++){
+        shapes[i] -> Print();
     }
     return 0;
 }
