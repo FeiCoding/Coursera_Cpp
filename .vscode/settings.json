@@ -5,6 +5,7 @@
         "cstring": "cpp",
         "ios": "cpp",
         "string": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "iosfwd": "cpp"
     }
 }
