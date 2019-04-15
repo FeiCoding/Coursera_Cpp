@@ -1,157 +1,185 @@
 #include <iostream>
+#include <cctype>
+#include <cstring>
 #include <string>
- 
+#include <sstream>
+
+
 using namespace std;
- 
-string str[22];
-string commend;
-int N;
-inline string MyCopy();	// copy N X L：取出第N个字符串第X个字符开始的长度为L的字符串。
-inline string MyAdd();	// add S1 S2：判断S1，S2是否为0-99999之间的整数，若是则将其转化为整数做加法，若不是，则作字符串加法，返回的值为一字符串。
-inline int MyFind();	// find S N：在第N个字符串中从左开始找寻S字符串，返回其第一次出现的位置，若没有找到，返回字符串的长度。
-inline int MyRfind();	// rfind S N：在第N个字符串中从右开始找寻S字符串，返回其第一次出现的位置，若没有找到，返回字符串的长度。
-inline void MyInsert();	// insert S N X：在第N个字符串的第X个字符位置中插入S字符串。
-inline void MyReset();	// reset S N：将第N个字符串变为S。
-struct GETS
+
+string str[21];
+int NumOfStr = 0;
+
+int string_to_int(string &st) {
+	int number;
+	istringstream iss(st);
+	iss >> number;
+	return number;
+}
+
+string int_to_string(int num) {
+	string out_string;
+	std::stringstream ss;
+	ss << num;
+	return ss.str();
+}
+
+bool isNum(string s)
 {
-	GETS(string &s)	// 递归获得真正的s串
+	for (int i = 0; i < s.length(); i++)
 	{
-		cin >> s;
-		if (s == "copy")
-			s = MyCopy();
-		else if (s == "add")
-			s = MyAdd();
-	}
-};
- 
-struct GETINT
-{
-	string Commend;
-	GETINT(int &n)	// 递归获得真正的int n
-	{
-		cin >> Commend;
-		if (Commend == "find")
-			n = MyFind();
-		else if (Commend == "rfind")
-			n = MyRfind();
-		else
-			n = atoi(Commend.c_str());
-	}
-};
- 
-struct GETSTRING
-{
-	GETSTRING(int &m, string &s)	// 递归获得真正的s串 并判断其是否为整数
-	{
-		GETS Gets(s);
-		int i = 0;
-		for (m = 0; i<s.length(); i++)
-			if ((s.at(i) >= '0') && (s.at(i) <= '9'))
-				m = m * 10 + s.at(i) - '0';
-			else
-				break;
-		if ((i != s.length()) || (m>99999))
-			m = -1;
-	}
-};
- 
-int main()
-{
-	cin >> N;
-	for (int i = 0; i<N; i++)
-		cin >> str[i + 1];
-	while (cin >> commend)
-	{
-		if (commend == "over")
-			break;
-		switch (commend.at(1))
+		if (!isdigit(s[i]))
 		{
-		case 'n':	MyInsert(); break;
-		case 'e':	MyReset(); break;
-		case 'r':	if (commend == "print")
-		{
-			int n;
-			cin >> n;
-			cout << str[n] << endl;
+			return false;
 		}
-					else
-					{
-						for (int j = 1; j <= N; j++)
-							cout << str[j] << endl;
-					}
-					break;
+	}
+	return true;
+}
+
+int find()
+{
+	char s;
+	int n;
+	cin >> s >> n;
+	return str[n].find(s);
+}
+
+int rfind()
+{
+	char s;
+	int n;
+	cin >> s >> n;
+	return str[n].rfind(s);
+}
+
+int get_int()
+{
+	string str;
+	cin >> str;
+	if (isNum(str))
+	{
+		return string_to_int(str);
+	}
+	else
+	{
+		if (str == "find")
+		{
+			return find();
+		}
+		else if (str == "rfind")
+		{
+			return rfind();
 		}
 	}
 	return 0;
 }
- 
-inline string MyCopy()
+
+
+
+string copy()
 {
 	int n, x, l;
-	GETINT getintn(n);
-	GETINT getintx(x);
-	GETINT getintl(l);
-	return (str[n].substr(x, l));
+	n = get_int();
+	x = get_int();
+	l = get_int();
+	return str[n].substr(x, l);
 }
- 
-inline string MyAdd()	// add S1 S2：判断S1，S2是否为0-99999之间的整数，若是则将其转化为整数做加法，若不是，则作字符串加法，返回的值为一字符串。
+
+string add();
+
+string get_str()
 {
-	string s1, s2;
-	int m = -1, n = -1;
-	GETSTRING getstringms1(m, s1);
-	GETSTRING getstringns2(n, s2);
-	if ((m == -1) || (n == -1))
-		return (s1 + s2);
+	string str;
+	cin >> str;
+	if (str == "copy")
+	{
+		return copy();
+	}
+	else if (str == "add")
+	{
+		return add();
+	}
 	else
 	{
-		m += n;
-		char chars[8];
-		_itoa_s(m, chars, 10);
-		return string(chars);
+		return str;
 	}
 }
- 
- 
-inline int MyFind()	// find S N：在第N个字符串中从左开始找寻S字符串，返回其第一次出现的位置，若没有找到，返回 ?? 哪个 ？？ 字符串的长度。
+
+string add()
 {
-	string s;
-	int n, value;
-	cin >> s;
-	GETINT getintn(n);
-	value = str[n].find(s);
-	if (value == string::npos)
-		value = str[n].length();
-	return value;
+	string s1 = get_str();
+	string s2 = get_str();
+	if (isNum(s1) && isNum(s2) && string_to_int(s1) >= 0 && string_to_int(s1) <= 99999 && string_to_int(s2) >= 0 && string_to_int(s2) <= 99999)
+	{
+		return int_to_string(string_to_int(s1) + string_to_int(s2));
+	}
+	else
+	{
+		return s1 + s2;
+	}
 }
- 
-inline int MyRfind()	// rfind S N：在第N个字符串中从右开始找寻S字符串，返回其第一次出现的位置，若没有找到，返回字符串的长度。
+
+void insert()
 {
-	string s;
-	int n, value;
-	cin >> s;
-	GETINT getintn(n);
-	value = str[n].rfind(s);
-	if (value == string::npos)
-		value = str[n].length();
-	return value;
-}
- 
-inline void MyInsert()	// insert S N X：在第N个字符串的第X个字符位置中插入S字符串。
-{
-	string s;
-	int n, x;
-	GETS Gets(s);
-	GETINT getintn(n);
-	GETINT getintx(x);
+	string s = get_str();
+	int n = get_int();
+	int x = get_int();
 	str[n].insert(x, s);
 }
- 
-inline void MyReset()	// reset S N：将第N个字符串变为S。
+
+void reset()
 {
-	string s;
-	int n;
-	GETS Gets(s);
-	GETINT getintn(n);
-	str[n].assign(s);
+	string s = get_str();
+	int n = get_int();
+	str[n] = s;
+}
+
+void print()
+{
+	int n = get_int();
+	cout << str[n] << endl;
+}
+
+void printall()
+{
+	for (int i = 1; i <= NumOfStr; i++)
+	{
+		cout << str[i] << endl;
+	}
+}
+
+int main()
+{
+	cin >> NumOfStr;
+	for (int i = 1; i <= NumOfStr; i++)
+	{
+		cin >> str[i];
+	}
+	while (true)
+	{
+		string operation;
+		cin >> operation;
+		if (operation == "insert")
+		{
+			insert();
+		}
+		else if (operation == "reset")
+		{
+			reset();
+		}
+		else if (operation == "print")
+		{
+			print();
+		}
+		else if (operation == "printall")
+		{
+			printall();
+		}
+		else if (operation == "over")
+		{
+			break;
+		}
+	}
+	return 0;
 
 }
