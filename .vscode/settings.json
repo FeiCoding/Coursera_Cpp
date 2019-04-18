@@ -7,5 +7,6 @@
         "string": "cpp",
         "xstring": "cpp",
         "iosfwd": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Disabled"
 }

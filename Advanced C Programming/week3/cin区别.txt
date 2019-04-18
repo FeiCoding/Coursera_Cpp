@@ -1,0 +1,13 @@
+1. 
+    cin.get() gets one char only
+    cin.getline() gets a c-string
+    getline() gets an std::string
+2. 
+    cin.getline() reads input up to '\n' and stops
+    cin.get() reads input up to '\n' and keeps '\n' in the stream
+
+3. 
+    get() extracts char by char from a stream and returns its value (casted to an integer) 
+    getline() is used to get a line from a file line by line.
+        1) Normally getline is used to filter out delimiters in applications where you have a flat file(with thousands of line) 
+        2) Want to extract the output(line by line) using certain delimiter and then do some operation on it.
