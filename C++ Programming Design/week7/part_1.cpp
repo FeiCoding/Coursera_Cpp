@@ -23,7 +23,6 @@ class CArray3D{
                 p[i][j] = new T[z];
             }
         }
-        
     }
     ~CArray3D(){
         if(p){

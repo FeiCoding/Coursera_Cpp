@@ -6,7 +6,10 @@
         "ios": "cpp",
         "string": "cpp",
         "xstring": "cpp",
-        "iosfwd": "cpp"
+        "iosfwd": "cpp",
+        "vector": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Disabled"
+    "C_Cpp.errorSquiggles": "Disabled",
+    "gnuGlobal.globalExecutable": "C:\\global\\bin\\global.exe",
+    "gnuGlobal.gtagsExecutable": "C:\\global\\bin\\gtags.exe"
 }
