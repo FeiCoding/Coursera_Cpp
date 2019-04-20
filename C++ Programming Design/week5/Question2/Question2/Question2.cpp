@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <list>
+#include <set>
 using namespace std;
 //支持迭代器种类：
 // vector          随机访问
@@ -30,9 +31,22 @@ int main() {
 		l.push_back(i * i);
 	}
 	li = l.begin();
-	while (li != l.end()) {//此处用小于号则会报错
+	while (li != l.end()) {//此处用小于号则会报错,双向迭代器
 		cout << *li << " ";
 		li++;
 	}
+
+	set<int> s;
+	set<int>::const_iterator si;
+	for (int i = 0; i < 10; i++) {
+		s.insert(i * i);
+	}
+	si = s.begin();
+	while (si != s.end()) {
+		cout << *si << " ";
+		si++;
+	}
+
+
 	return 0;
 }
