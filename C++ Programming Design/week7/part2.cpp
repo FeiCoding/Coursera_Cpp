@@ -9,5 +9,7 @@ int main(){
 
     cout << fixed << setprecision(5) << num << endl;
 	cout << scientific << setprecision(7) << num << endl;
+
+    printf("%f", (float)1 /2);
     return 0;
 }

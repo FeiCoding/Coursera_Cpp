@@ -1,0 +1,1 @@
+pp = ms1.erase(ms1.lower_bound(22), ms1.upper_bound(22));
