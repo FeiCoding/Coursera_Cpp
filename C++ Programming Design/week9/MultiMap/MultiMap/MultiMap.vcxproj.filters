@@ -26,5 +26,8 @@
     <ClCompile Include="MultiMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="templateStructureTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
