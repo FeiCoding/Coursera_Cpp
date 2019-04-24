@@ -1,0 +1,5 @@
+﻿  pch.cpp
+  MultiMap.cpp
+c:\projects\coursera_cpp\c++ programming design\week9\multimap\multimap\multimap.cpp(29): warning C4101: 'score': unreferenced local variable
+c:\projects\coursera_cpp\c++ programming design\week9\multimap\multimap\multimap.cpp(28): warning C4101: 'id': unreferenced local variable
+  MultiMap.vcxproj -> C:\Projects\Coursera_Cpp\C++ Programming Design\week9\MultiMap\Debug\MultiMap.exe
