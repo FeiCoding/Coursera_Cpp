@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "code-runner.runInTerminal": true,
     "files.associations": {
-        "queue": "cpp"
+        "queue": "cpp",
+        "iostream": "cpp"
     }
 }
