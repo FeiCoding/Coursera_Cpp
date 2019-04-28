@@ -31,29 +31,24 @@ int main()
     vector<Point>::iterator i, j;
     int nTotalNum = 0;
     // 在此处补充你的代码
-    for (i = v.begin(); i < v.end(); i++)
+    // 其实，点的关系只要满足存在这四个点就可以了(x1,y1)(x2,y2)(x1,y2)(x2,y1)。注意x1!=x2,x2!=x1
+    sort(v.begin(), v.end());
+    for (i = v.begin(); i < v.end() - 1; i++)
     {
-        for (j = v.begin(); j < v.end(); j++)
+        for (j = i + 1; j < v.end(); j++)
         {
-            if (*j < *i)
-            {
-                if (*i->x < *j->x || *i->y < *j->y)
+            if(binary_search(v.begin(), v.end(), Point(j->x, i->y)) && 
+                binary_search(v.begin(), v.end(), Point(i->x, j->y)) &&
+                i->x != j->x &&
+                i->y != j->y )
                 {
                     nTotalNum++;
+                    cout << " " << j->x << " " << j->y << " " << i->x << " " << j->y << endl;
                 }
-            }
-            else if (*i < *j)
-            {
-                if (*j->x - *i->x || *j->y - *i->y)
-                {
-                    nTotalNum++;
-                }
-            }
-            else
-            {
-                continue;
-            }
+                
         }
     }
+    //
+    cout << nTotalNum / 2 << endl;
     return 0;
 }
