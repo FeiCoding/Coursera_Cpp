@@ -35,7 +35,7 @@ struct Print{
 template <class T, class Func>
 void Show(T init, T end, Func fun){
     for(;init != end; init++){
-        func(init);
+        fun(*init);
     }
 }
 
