@@ -11,12 +11,6 @@ class MyLess{
     }
 };
 
-template <class T>
-struct greater: public binary_function<T, T, bool>{
-    bool operator ()(const T &c1, const T &c2) const {
-        return c1 > c2;
-    }
-};
 
 template <class T>
 void PrintAll(T b, T e){
@@ -34,6 +28,9 @@ int main(){
     PrintAll(ll.begin(), ll.end());
     
     ll.sort(MyLess<int>());
+    PrintAll(ll.begin(), ll.end());
+
+    ll.sort(greater<int>());
     PrintAll(ll.begin(), ll.end());
     
     return 0;
