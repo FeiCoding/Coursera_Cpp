@@ -5,6 +5,26 @@
 #include <algorithm>
 using namespace std;
 // 在此处补充你的代码
+#include <functional>
+template <class key, class value, class Pred = greater<Key> >
+class MyMultimap: public multimap<Key, Value, Pred>{
+    public:
+        void Set(Key key, Value value){
+            typedef multimap<Key, Value, Pred>::iterator myIt;
+            pair<myIt, myIt> bounds = this->equal_range(key);
+            for(myIt it = bounds.first; it != bounds.second; it++){
+                it->second = value;
+            }
+        }
+};
+
+template<class T1, class T2>
+ostream& operator<<(ostream &os, pair<T1, T2> p)
+{
+	cout << "(" << p.first << "," << p.second << ")";
+	return os;
+}
+
 struct Student
 {
         string name;
