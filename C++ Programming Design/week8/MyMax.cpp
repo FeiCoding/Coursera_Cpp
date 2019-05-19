@@ -26,6 +26,16 @@ bool mycompare(const T &t1, const T &t2){
     else
         return true;
 }
+template <class T, class Func>
+T MyMax(T begin, T end, Func fun){
+    T temp = begin;
+    for(;begin != end; begin++){
+        if(fun(*temp, *begin)){
+            temp = begin;
+        }
+    }
+    return temp;
+}
 
 int main(){
     int Size = 5;
@@ -38,5 +48,9 @@ int main(){
 
     ll.sort(mycompare<int>);
     PrintAll(ll.begin(), ll.end());
+
+    cout << *MyMax(ll.begin(), ll.end(), MyLess<int>());
+    cout << endl;
+    cout << *MyMax(ll.begin(), ll.end(), mycompare<int>) << endl;
     return 0;
 }
